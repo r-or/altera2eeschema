@@ -6,11 +6,22 @@ The Altera pinouts are on this page: https://www.altera.com/support/literature/l
 
 Check out the section '#PARAMS' in the script to get more options, i.e. grid size, pin groups, layout of device, ...
 
+Basic usage:
+```
+python altera2eeschema.py uglytabbedalterapinoutfile.txt mynewalteralibrary.lib
+```
+
+On linux you can also call it this way:
+```
+./altera2eeschema.py
+```
+
+
 Type
 ```
 python altera2eeschema.py -h
 ```
-for help.
+for more help.
 
 After conversion it can look like this:
 http://i.imgur.com/Rsn7V07.png
