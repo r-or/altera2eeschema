@@ -16,12 +16,12 @@ xMinOffset = 500                            # if single group, min offset by thi
 yOffset = -50                               # basic pin offset (=~ GRID!)
 gridSize = math.fabs(yOffset)
 
-pinGroupSanitize = 3                      # merge groups if first X chars are the same (only if groupname > X)
+pinGroupSanitize = 5                      # merge groups if first X chars are the same (only if groupname > X)
 yGroupOffset = int(3 * yOffset)
 pinLength = int(4 * gridSize)
 pinTextSize = int(gridSize / 2)
 
-singleGroups = True                        # do not make 1 big device, but spread out the pin groups on a plane
+singleGroups = False                        # do not make 1 big device, but spread out the pin groups on a plane
 makeRec = True                             # Rectangle around groups, only effective if singleGroups = True
 makeUnits = True                           # whether to tag groups as Kicad-Units A, B, ... only effective if singleGroups = True
 
@@ -59,21 +59,8 @@ class FP:
         
     def updateMapping(self, increment):
         idx = 1
-        newpGroups = copy.deepcopy(self.pinGroups)
-        for grp in self.pinGroups:
-            if not self.san and self.getGroupSize(grp) == 1:  # merge
-                del newpGroups[grp]
-                print 'groupSize = 1'
-                if 'MISC' not in newpGroups:
-                    newpGroups.append('MISC')
-                for pin in self.pins:
-                    if pin.actualGroup == grp:
-                        self.pins[self.pins.index(pin)].actualGroup = 'MISC'
-                        print 'changed', pin.actualGroup, 'to MISC'
-                        break
-        self.pinGroups = newpGroups
         p = False
-        if len(self.pinGroups) > 26:
+        if len(self.pinGroups) > 26 and increment:
             print 'Warning: Kicad units active but too many pin groups found ({} vs. 26 allowed). \n'.format(str(len(self.pinGroups))), \
                     'Maybe decrease \'pinGroupSanitize\' parameter?\npin groups:\n\tpGroup\tLength\tKicad Unit'
             p = True
@@ -84,7 +71,6 @@ class FP:
             if increment and idx < 26:
                 idx += 1
             
-        
     def getGroupSize(self, group):
         size = 0
         for pin in self.pins:
